@@ -2,6 +2,8 @@ const path = require('path')
 const express = require('express')
 const xss = require('xss')
 const UsersService = require('./users-service')
+const NotesService = require('../notes-service')
+
 const { use } = require('chai')
 const usersRouter = express.Router()
 const jsonParser = express.json()
@@ -14,9 +16,23 @@ const serializeUser = user =>({
 
 usersRouter.route('/').get((req,res,next)=>{
     const knexInstance = req.app.get('db')
-    UsersService.getAllUsers(knexInstance)
-    .then(users=>{res.json(users.map(serializeUser))})
+    const username = req.query.username
+    const email = req.query.email
+    if(username){
+        UsersService.getByUsername(knexInstance,username,email)
+    .then(user=>{
+        if(!user){
+            return res.status(401).json({
+                error:{message:'I cannot find the user matach this username and email'}
+            })
+        }
+        res.json(serializeUser(user))})
     .catch(next)
+    }
+    else {UsersService.getAllUsers(knexInstance)
+    .then(users=>{res.json(users.map(serializeUser))})
+    .catch(next)}
+    
 }).post(jsonParser,(req,res,next)=>{
     const {username, email} = req.body
     const newUser = { username }
@@ -46,6 +62,9 @@ usersRouter.route('/:user_id').all((req,res,next)=>{
                 error:{message:`User doesn't exist`}
             })
         }
+        //validation by email
+
+
         res.user = user
         next()
     }).catch(next)
@@ -68,6 +87,13 @@ usersRouter.route('/:user_id').all((req,res,next)=>{
     UsersService.updateUser(req.app.get('db'),req.params.user_id,userToUpdate)
     .then(numRowsAffected=>{
         res.status(204).end()
+    }).catch(next)
+})
+
+usersRouter.route('/:user_id/notes').get((req,res,next)=>{
+    NotesService.getNoteforUser(req.app.get('db'),req.params.user_id)
+    .then(notes=>{
+        res.json(notes)
     }).catch(next)
 })
 

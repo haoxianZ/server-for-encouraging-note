@@ -20,7 +20,12 @@ const UsersService = {
         .where('id', id)
         .first()
     },
-  
+    getByUsername(knex, username,email) {
+      return knex.from('users').select('*')
+      .where('username','like',username)
+      .andWhere('email','like',email)
+      .first()
+    },
     deleteUser(knex, id) {
       return knex('users')
         .where({ id })

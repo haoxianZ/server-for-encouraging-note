@@ -10,8 +10,8 @@ notesRouter.route('/').get((req,res,next)=>{
         res.json(notes)
     }).catch(next)
 }).post(jsonParser,(req,res,next)=>{
-    const { content} = req.body
-    const newNote = { content }
+    const { content, user_id} = req.body
+    const newNote = { content, user_id }
     for (const [key, value] of Object.entries(newNote)){
       if (value == null){
         return res.status(400).json({
@@ -52,11 +52,11 @@ notesRouter.route('/:note_id')
 ).delete((req,res,next)=>{
     NotesService.deleteById(req.app.get('db'),req.params.note_id)
     .then(()=>{
-        res.status(204).end()
+        res.status(204).json({message:'Note deleted'}).end()
     }).catch(next)
 }).patch(jsonParser,(req,res,next)=>{
-    const {content} = req.body
-    const noteToUpdate = {content}
+    const {content, user_id} = req.body
+    const noteToUpdate = {content, user_id}
     const numberOfValues = Object.values(noteToUpdate).filter(Boolean).length
       if (numberOfValues === 0) {
           return res.status(400).json({
@@ -67,10 +67,12 @@ notesRouter.route('/:note_id')
         req.app.get('db'),
         req.params.note_id,
         noteToUpdate
-        //what is the numRowsAffected?
-        ).then(numRowsAffected=>{
-          res.status(204).end()  
-        }).catch(next)
+        ).then(note => {
+            console.log(note)
+            res
+              .status(200)
+              .json(note)
+          }).catch(next)
 })
 
 module.exports = notesRouter
