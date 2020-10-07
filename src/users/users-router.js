@@ -3,15 +3,14 @@ const express = require('express')
 const xss = require('xss')
 const UsersService = require('./users-service')
 const NotesService = require('../notes-service')
-
-const { use } = require('chai')
 const usersRouter = express.Router()
 const jsonParser = express.json()
 
 const serializeUser = user =>({
     id: user.id,
     username:xss(user.username),
-    email: xss(user.email)
+    email: xss(user.email),
+    serialid: user.serialid
 })
 
 usersRouter.route('/').get((req,res,next)=>{
