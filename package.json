@@ -2,7 +2,10 @@
   "name": "encouragement-exchange",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "engines": {
+    "node": "12.18.3"
+  },
+  "main": "server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
