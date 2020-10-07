@@ -5,7 +5,7 @@
   "engines": {
     "node": "12.18.3"
   },
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
