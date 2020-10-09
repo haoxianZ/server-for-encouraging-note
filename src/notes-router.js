@@ -46,7 +46,8 @@ notesRouter.route('/:note_id')
     .get((req,res,next)=>{
         res.json({
             id:res.note.id,
-            content: xss(res.note.content)
+            content: xss(res.note.content),
+            Liked:note.Liked
         })
     }       
 ).delete((req,res,next)=>{
