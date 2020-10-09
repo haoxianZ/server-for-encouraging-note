@@ -34,7 +34,7 @@ usersRouter.route('/').get((req,res,next)=>{
     
 }).post(jsonParser,(req,res,next)=>{
     const {username, email} = req.body
-    const newUser = { username }
+    const newUser = { username, email }
 
     for(const [key,value] of Object.entries(newUser)){
         if(value == null){
@@ -43,7 +43,6 @@ usersRouter.route('/').get((req,res,next)=>{
             })
         }
     }
-    newUser.email = email
     UsersService.insertUser(req.app.get('db'), newUser)
     .then(user=>{
         res.status(201)
