@@ -10,8 +10,8 @@ notesRouter.route('/').get((req,res,next)=>{
         res.json(notes)
     }).catch(next)
 }).post(jsonParser,(req,res,next)=>{
-    const { content, user_id} = req.body
-    const newNote = { content, user_id }
+    const { content, user_id, liked} = req.body
+    const newNote = { content, user_id, liked }
     for (const [key, value] of Object.entries(newNote)){
       if (value == null){
         return res.status(400).json({
@@ -47,7 +47,7 @@ notesRouter.route('/:note_id')
         res.json({
             id:res.note.id,
             content: xss(res.note.content),
-            Liked:note.Liked
+            liked:note.liked
         })
     }       
 ).delete((req,res,next)=>{
@@ -56,8 +56,8 @@ notesRouter.route('/:note_id')
         res.status(204).json({message:'Note deleted'}).end()
     }).catch(next)
 }).patch(jsonParser,(req,res,next)=>{
-    const {content, user_id} = req.body
-    const noteToUpdate = {content, user_id}
+    const {content, user_id, liked} = req.body
+    const noteToUpdate = {content, user_id, liked}
     const numberOfValues = Object.values(noteToUpdate).filter(Boolean).length
       if (numberOfValues === 0) {
           return res.status(400).json({
