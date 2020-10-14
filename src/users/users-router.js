@@ -22,7 +22,7 @@ usersRouter.route('/').get((req,res,next)=>{
     .then(user=>{
         if(!user){
             return res.status(401).json({
-                error:{message:'I cannot find the user matach this username and email'}
+                error:{message:'Check you info again, it is case sensitive'}
             })
         }
         res.json(serializeUser(user))})
