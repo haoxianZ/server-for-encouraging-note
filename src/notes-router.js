@@ -69,7 +69,6 @@ notesRouter.route('/:note_id')
         req.params.note_id,
         noteToUpdate
         ).then(note => {
-            console.log(note)
             res
               .status(200)
               .json(note)
